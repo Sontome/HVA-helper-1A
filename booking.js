@@ -49,7 +49,7 @@
     nameADT:'NM1{surname}/{givenName} {title}(ADT){infantSuffix}',
     nameCHD:'NM1{surname}/{givenName} {title}(CHD/{dob})',
     nameINF:'(INF{surname}/{givenName} {title}/{dob})',
-    contacts:'APE-HANVIETAIR.SERVICE@GMAIL.COM\nAPE-HANVIETAIR247@gmail.com/p1\nAPM-+82 1035463396\nAPM-+82 1035463396/p1\nAPM-+82 1021511790/p1\nAPN-M+82 1035463396/KR/P1',
+    contacts:'APE-HANVIETAIR.SERVICE@GMAIL.COM\nAPE-HANVIETAIR247@gmail.com/p1\nAPM-+82 1035463396\nAPM-+82 1035463396/p1\nAPM-+82 1021511790/p1',
     extra:'TK OK\nRF HVA',commit:'ER',afterCommit:'IG',successPattern:'',classOrder:''
   };
   function normalizePassenger(passenger) {
