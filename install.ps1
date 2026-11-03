@@ -149,6 +149,12 @@ try {
     $marker | ConvertTo-Json | Set-Content -LiteralPath $markerPath -Encoding UTF8
     Write-Host "Ready: Tool Helper 1A $($manifest.version)" -ForegroundColor Green
     Write-Host "Extension folder: $extensionPath"
+    try {
+        Set-Clipboard -Value $extensionPath -ErrorAction Stop
+        Write-Host 'Extension folder copied to clipboard. Paste it into the Load unpacked folder dialog.' -ForegroundColor Green
+    } catch {
+        Write-Warning 'Could not copy to clipboard. Copy the extension folder path printed above.'
+    }
     if ($backupPath) { Write-Host "Previous version kept at: $backupPath" }
     Write-Host ''
     Write-Host 'FIRST INSTALL: chrome://extensions -> Developer mode -> Load unpacked -> select the extension folder above.'
