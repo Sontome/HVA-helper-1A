@@ -7,3 +7,7 @@ Trong chrome://extensions, bấm Reload tiện ích rồi tải lại tab Altea.
 
 
 irm https://raw.githubusercontent.com/Sontome/HVA-helper-1A/main/install.ps1 | iex
+
+
+
+%LOCALAPPDATA%\Hanvietair\ToolHelper1A\extension
