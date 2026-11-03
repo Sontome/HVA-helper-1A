@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Tool Helper 1A",
+  "version": "0.12.1",
+  "icons": {"16":"icons/icon-16.png","32":"icons/icon-32.png","48":"icons/icon-48.png","128":"icons/icon-128.png"},
+  "action": {
+    "default_title": "Tool Helper 1A",
+    "default_icon": {"16":"icons/icon-16.png","32":"icons/icon-32.png","48":"icons/icon-48.png","128":"icons/icon-128.png"}
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["https://apilive.hanvietair.com/*"],
+  "background": {"service_worker":"background.js"},
+  "description": "Thanh công cụ session Altea sử dụng phiên trình duyệt hiện tại.",
+  "content_scripts": [
+    {"matches":["https://tc345.resdesktop.altea.amadeus.com/*"],"js":["bridge.js"],"run_at":"document_start","world":"MAIN","all_frames":true},
+    {"matches":["https://tc345.resdesktop.altea.amadeus.com/*"],"js":["availability.js","booking.js","sidebar.js"],"run_at":"document_idle","all_frames":true}
+  ]
+}

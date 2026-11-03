@@ -1,0 +1,27 @@
+const assert=require('node:assert/strict'),B=require('./booking.js'),N=require('./notification.js');
+(async()=>{
+  const steps=[{label:'Sell',command:'SSVN415H20NOVICNHANPE1'},{label:'Save',kind:'commit',command:'ER'},{label:'Ignore',kind:'afterCommit',command:'IG'}];
+  const sent=[];
+  const pnr=await B.runBooking(async command=>{sent.push(command);return{text:command==='IG'?'> IG\nIGNORED - EZZ8BA\n>':command==='ER'?'END OF TRANSACTION COMPLETE':'OK'};},steps);
+  assert.equal(pnr,'EZZ8BA');assert.equal(sent.at(-1),'IG');
+  assert.equal(B.ignoredLocator('> IG\r\nIGNORED - EZZ8BA\r\n>'),'EZZ8BA');
+  assert.equal(B.ignoredLocator('IGNORED'),null);
+  await assert.rejects(()=>B.runBooking(async command=>({text:command==='IG'?'IGNORED':'OK'}),steps));
+  await assert.rejects(()=>B.runBooking(async command=>({text:command==='ER'?'RP/OFFICE 20NOV26/1000Z ABC123':command==='IG'?'IGNORED - EZZ8BA':'OK'}),steps));
+  const failed=[];
+  await assert.rejects(()=>B.runBooking(async command=>{failed.push(command);return{text:command==='ER'?'INVALID FORMAT':'OK'};},steps));
+  assert(!failed.includes('IG'));
+  const posts=[];
+  const input={pnr,type:'VFR',name:'TRINH/SON MR'};
+  const results=await N.notify(input,async(url,options)=>{posts.push({url,options});return{ok:true,text:async()=>'{"success":true}'};});
+  assert(results.every(r=>r.ok));
+  assert.deepEqual(posts.map(p=>p.url),['https://apilive.hanvietair.com/add-reprice','https://apilive.hanvietair.com/send']);
+  assert.deepEqual(JSON.parse(posts[0].options.body),{pnrs:'EZZ8BA',type:'VFR'});
+  assert.deepEqual(JSON.parse(posts[1].options.body),{message:'Đã vào hàng chờ thành công PNR EZZ8BA  TRINH/SON MR'});
+  assert(posts.every(p=>p.options.credentials==='omit'&&p.options.method==='POST'));
+  let count=0;const partial=await N.notify(input,async()=>{count++;return{ok:count===2,status:500,text:async()=>''};});
+  assert.equal(count,2);assert.equal(partial[0].ok,false);assert.equal(partial[1].ok,true);
+  assert.throws(()=>N.payloads({...input,type:'INF'}));
+  assert.throws(()=>N.payloads({...input,pnr:'BAD'}));
+  console.log('PASS: IG PNR, missing/mismatched PNR, ER failure stops IG, API payloads/credentials, partial failures, input validation (mock HTTP only)');
+})().catch(error=>{console.error(error);process.exitCode=1;});
